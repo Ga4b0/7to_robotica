@@ -1,39 +1,15 @@
-#include <WiFi.h>
-
-const char* ssid = "informatica7";
-const char* password = "Info_@@7";
-
-WiFiServer serve(8888);
-WiFiClient client;
+#define pin 34
+String cad ="";
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  WiFi.begin(ssid,password);
-  while(WiFi.status() != WL_CONNECTED){
-    delay(1000);
-    Serial.println("Conectandose....");
-  }
-  Serial.println("Cliente conectado");
-  Serial.println(WiFi.localIP());
-  //Es importante ingresar la linea de comando serve.begin() esto para iniciar el servidor y realizar peticiones
-  serve.begin();
 }
 
 void loop() {
-  // int r = random(0,255);
-  int r = random(0,100);
-  int g = random(0,255);
-  int b = random(0,255);
-  String colores = String(r) + "-" + String(g) + "-" + String(b);
-  if(!client || !client.connected()){
-    //Vuelve a conectar
-    client = serve.available();
-  }
-  client.println(r);
-  Serial.println(r);
+  delay(1000);  // Espera entre lecturas (mínimo 2 segundos para DHT11)
+  int h = analogRead(pin);
+  int h_mapeo = map(h,0,4095,1,280);
+  Serial.println(h_mapeo);
   delay(500);
-
-  //Nota cuando el esp32 envia la informacion este se desconecta de WiFiClient
-  //Por tal razon es necesario volver a inicializarlo con WiFiServer.available();
 }
